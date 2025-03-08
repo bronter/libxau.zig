@@ -1,5 +1,6 @@
 .{
-  .name = "libxau.zig",
+  .name = .libxau_zig,
+  .fingerprint = 0xcaa3e7da5e64df09,
   .version = "1.0.11",
   .paths = .{""},
   .dependencies = .{

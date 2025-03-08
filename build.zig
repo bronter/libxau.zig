@@ -10,13 +10,15 @@ pub fn build(b: *std.Build) !void {
     const libxauSource = b.dependency("libxau", .{});
     const xorgprotoSource = b.dependency("xorgproto", .{});
 
+    const libxau_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+
     const libxau = std.Build.Step.Compile.create(b, .{
         .name = "Xau",
-        .root_module = .{
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-        },
+        .root_module = libxau_mod,
         .kind = .lib,
         .linkage = linkage,
     });
@@ -44,9 +46,7 @@ pub fn build(b: *std.Build) !void {
         };
 
         for (headers) |header| {
-            const install_file = b.addInstallFileWithDir(libxauSource.path(b.pathJoin(&.{ "include", header })), .header, header);
-            b.getInstallStep().dependOn(&install_file.step);
-            libxau.installed_headers.append(&install_file.step) catch @panic("OOM");
+            libxau.installHeader(libxauSource.path(b.pathJoin(&.{ "include", header })), header);
         }
     }
 
