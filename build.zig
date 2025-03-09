@@ -16,10 +16,9 @@ pub fn build(b: *std.Build) !void {
         .link_libc = true,
     });
 
-    const libxau = std.Build.Step.Compile.create(b, .{
+    const libxau = b.addLibrary(.{
         .name = "Xau",
         .root_module = libxau_mod,
-        .kind = .lib,
         .linkage = linkage,
     });
 
